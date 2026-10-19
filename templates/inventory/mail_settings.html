@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}Correo Microsoft{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">ALERTAS / CUENTA PERSONAL MICROSOFT</span><h1>Notificaciones por correo</h1></div><span class="badge {% if enabled %}green{% endif %}">{% if enabled %}Habilitado{% else %}Deshabilitado{% endif %}</span></div>
+<form method="post" class="bounded-form">{% csrf_token %}{{ form.as_p }}<div class="form-actions"><a class="button" href="{% url 'alerts' %}"><i data-lucide="arrow-left"></i> Volver</a><button class="button primary"><i data-lucide="save"></i> Guardar configuracion</button></div></form>
+{% endblock %}

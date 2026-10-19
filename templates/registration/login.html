@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Acceso{% endblock %}
+{% block content %}
+<section class="login-shell">
+  <div class="login-image"><img src="{% static 'laboratory.jpg' %}" alt="Material y equipo de laboratorio"><div class="login-brand"><i data-lucide="flask-conical"></i> Lote<span>LAB</span></div></div>
+  <div class="login-form"><span class="eyebrow">ALMACEN DE LABORATORIO</span><h1>Iniciar sesion</h1><p class="muted">Ciudad de Mexico &middot; Equipo local</p>
+    <form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button class="button primary full" type="submit"><i data-lucide="log-in"></i> Entrar</button></form>
+  </div>
+</section>
+{% endblock %}

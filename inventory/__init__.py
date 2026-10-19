@@ -1,0 +1,1 @@
+"""Inventario y trazabilidad de laboratorio."""

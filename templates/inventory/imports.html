@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Revision de Excel{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">ALMACEN / SALDOS INICIALES</span><h1>Revision de Excel</h1></div><i class="heading-icon" data-lucide="file-spreadsheet"></i></div>
+<section class="upload-area"><form method="post" enctype="multipart/form-data">{% csrf_token %}{{ form.as_p }}<button class="button primary"><i data-lucide="upload"></i> Preparar revision</button></form></section>
+<section class="section"><div class="section-heading"><h2>Libros recibidos</h2></div><div class="table-wrap"><table><thead><tr><th>Archivo</th><th>Fecha de revision</th><th>Responsable</th><th></th></tr></thead><tbody>{% for file in files %}<tr><td><a class="table-name" href="{% url 'import_detail' file.pk %}">{{ file.name }}</a><small>SHA-256 {{ file.digest|truncatechars:20 }}</small></td><td>{{ file.created_at|date:'d/m/Y H:i' }}</td><td>{{ file.actor.username }}</td><td><a class="button compact" href="{% url 'import_detail' file.pk %}">Revisar <i data-lucide="arrow-right"></i></a></td></tr>{% empty %}<tr><td colspan="4"><div class="empty"><i data-lucide="file-input"></i><strong>No hay libros pendientes</strong></div></td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

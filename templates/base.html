@@ -1,0 +1,31 @@
+{% load static %}<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Almacen de laboratorio{% endblock %} | Lote</title>
+  <link rel="stylesheet" href="{% static 'app.css' %}">
+  <script defer src="{% static 'lucide.min.js' %}"></script>
+  <script defer src="{% static 'app.js' %}"></script>
+</head>
+<body>
+{% if user.is_authenticated %}
+<header class="mobile-top"><a href="{% url 'dashboard' %}" class="brand"><i data-lucide="flask-conical"></i> Lote<span>LAB</span></a><button class="icon-button" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false" title="Menu"><i data-lucide="menu"></i></button></header>
+<aside class="sidebar" id="navigation">
+  <a href="{% url 'dashboard' %}" class="brand"><i data-lucide="flask-conical"></i> Lote<span>LAB</span></a>
+  <div class="sidebar-label">ALMACEN CLINICO</div>
+  <nav aria-label="Navegacion principal">
+    <a href="{% url 'dashboard' %}" {% if active == 'dashboard' %}class="active" aria-current="page"{% endif %}><i data-lucide="layout-dashboard"></i> Resumen</a>
+    <a href="{% url 'stock_list' %}" {% if active == 'stocks' %}class="active" aria-current="page"{% endif %}><i data-lucide="boxes"></i> Existencias</a>
+    <a href="{% url 'products' %}" {% if active == 'products' %}class="active" aria-current="page"{% endif %}><i data-lucide="flask-round"></i> Catalogo</a>
+    <a href="{% url 'movements' %}" {% if active == 'movements' %}class="active" aria-current="page"{% endif %}><i data-lucide="arrow-left-right"></i> Movimientos</a>
+    <a href="{% url 'alerts' %}" {% if active == 'alerts' %}class="active" aria-current="page"{% endif %}><i data-lucide="bell"></i> Alertas</a>
+    {% if perms.inventory.import_inventory %}<a href="{% url 'imports' %}" {% if active == 'imports' %}class="active" aria-current="page"{% endif %}><i data-lucide="file-spreadsheet"></i> Revision de Excel</a>{% endif %}
+  </nav>
+  <div class="sidebar-bottom"><span class="local-status"><span></span> Local &middot; Ciudad de Mexico</span><div class="user-row"><div class="avatar">{{ user.username|first|upper }}</div><div><strong>{{ user.username }}</strong><small>{% if user.is_superuser %}Administrador{% elif perms.inventory.operate_inventory %}Operador{% else %}Consulta{% endif %}</small></div><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="icon-button" aria-label="Cerrar sesion" title="Cerrar sesion"><i data-lucide="log-out"></i></button></form></div>{% if user.is_superuser %}<a class="admin-link" href="/admin/">Administracion de usuarios <i data-lucide="arrow-up-right"></i></a>{% endif %}</div>
+</aside>
+{% endif %}
+<main class="{% if user.is_authenticated %}workspace{% else %}auth-workspace{% endif %}" id="main">
+  {% if messages %}<div class="messages" role="status">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+</body></html>

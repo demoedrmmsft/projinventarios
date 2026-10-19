@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Resumen{% endblock %}
+{% block content %}
+<div class="page-heading"><div><span class="eyebrow">ALMACEN / VISTA GENERAL</span><h1>Resumen del inventario</h1><p class="muted">{{ today|date:'l, d \d\e F Y' }}</p></div>{% if perms.inventory.operate_inventory %}<a class="button primary" href="{% url 'receive' %}"><i data-lucide="package-plus"></i> Registrar entrada</a>{% endif %}</div>
+<div class="metrics">
+  <a class="metric" href="{% url 'products' %}"><span>Productos en catalogo <i data-lucide="flask-conical"></i></span><strong>{{ product_count }}</strong><small>Referencias registradas</small></a>
+  <a class="metric" href="{% url 'stock_list' %}?state=usable"><span>Partidas disponibles <i data-lucide="boxes"></i></span><strong>{{ stock_count }}</strong><small>Aceptadas y vigentes</small></a>
+  <a class="metric warning" href="{% url 'stock_list' %}?state=soon"><span>Proximas a vencer <i data-lucide="clock-3"></i></span><strong>{{ soon_count }}</strong><small>Dentro de 90 dias</small></a>
+  <a class="metric danger" href="{% url 'stock_list' %}?state=expired"><span>Partidas vencidas <i data-lucide="shield-alert"></i></span><strong>{{ expired_count }}</strong><small>Bloqueadas para consumo</small></a>
+</div>
+{% if pending_count and perms.inventory.import_inventory %}<a class="review-band" href="{% url 'imports' %}"><i data-lucide="file-check-2"></i><div><strong>{{ pending_count }} filas pendientes de revision</strong><span>Saldo inicial del Excel</span></div><i data-lucide="arrow-right"></i></a>{% endif %}
+<section class="section"><div class="section-heading"><h2>Atencion por caducidad</h2><a href="{% url 'alerts' %}">Ver alertas <i data-lucide="arrow-up-right"></i></a></div>
+{% include 'inventory/stock_table.html' with stocks=attention %}</section>
+<div class="split-sections"><section class="section"><div class="section-heading"><h2>Ultimos movimientos</h2><a href="{% url 'movements' %}" aria-label="Ver movimientos" title="Ver movimientos"><i data-lucide="arrow-up-right"></i></a></div>{% for movement in movements %}<div class="activity"><span class="activity-icon"><i data-lucide="{% if movement.kind == 'receive' %}package-plus{% else %}arrow-left-right{% endif %}"></i></span><div><strong>{{ movement.stock.batch.product.name }}</strong><small>{{ movement.get_kind_display }} &middot; {{ movement.actor.username }}</small></div><div class="activity-value"><strong>{{ movement.quantity|floatformat:'-3' }} {{ movement.stock.batch.product.unit }}</strong><small>{{ movement.created_at|date:'d M, H:i' }}</small></div></div>{% empty %}<div class="empty"><i data-lucide="history"></i><strong>Sin movimientos</strong></div>{% endfor %}</section>
+<section class="section"><div class="section-heading"><h2>Existencia minima</h2><i data-lucide="chart-no-axes-column"></i></div>{% for product in low %}<div class="activity"><div><strong>{{ product.name }}</strong><small>Minimo: {{ product.minimum|floatformat:'-3' }} {{ product.unit }}</small></div><span class="badge amber">Bajo minimo</span></div>{% empty %}<div class="empty"><i data-lucide="circle-check"></i><strong>Sin faltantes registrados</strong></div>{% endfor %}<div class="mail-summary"><i data-lucide="mail"></i> {{ mail_pending }} notificaciones pendientes</div></section></div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% load static %}
+{% block title %}Alta inicial{% endblock %}
+{% block content %}
+<section class="login-shell">
+  <div class="login-image"><img src="{% static 'laboratory.jpg' %}" alt="Material y equipo de laboratorio"><div class="login-brand"><i data-lucide="flask-conical"></i> Lote<span>LAB</span></div></div>
+  <div class="login-form"><span class="eyebrow">CONFIGURACION INICIAL</span><h1>Administrador del almacen</h1><form method="post">{% csrf_token %}{{ form.as_p }}<button class="button primary full"><i data-lucide="user-plus"></i> Crear administrador</button></form></div>
+</section>
+{% endblock %}
